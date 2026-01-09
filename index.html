@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 2.2: Kể Chuyện Bằng Biểu Đồ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f9ff; scroll-behavior: smooth; }
+        .card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); margin-bottom: 3rem; overflow: hidden; border: 1px solid #e0f2fe; }
+        .section-title { border-left: 8px solid #0284c7; padding-left: 1.5rem; margin-bottom: 2rem; color: #0369a1; font-weight: 800; font-size: 1.875rem; }
+        canvas { max-height: 400px; width: 100% !important; }
+        .quiz-option { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: 2px solid #f1f5f9; }
+        .quiz-option:hover:not(:disabled) { background-color: #f0f9ff; border-color: #0ea5e9; transform: scale(1.02); }
+        .correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534; font-weight: bold; }
+        .wrong { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b; }
+        .sticky-nav { position: sticky; top: 0; z-index: 100; background: rgba(240, 249, 255, 0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #bae6fd; }
+        .step-card { transition: all 0.3s ease; }
+        .step-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .animate-bounce-subtle { animation: bounce-subtle 2s infinite ease-in-out; }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12 py-10 bg-gradient-to-r from-sky-600 to-blue-700 rounded-[2rem] shadow-xl text-white">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 tracking-tight">📊 KỂ CHUYỆN BẰNG BIỂU ĐỒ</h1>
+            <div class="h-1 w-24 bg-yellow-400 mx-auto rounded-full mb-4"></div>
+            <p class="text-xl opacity-90 font-medium">Môn: Tin học - Lớp 1 | Vinschool Grand Park</p>
+        </header>
+
+        <!-- Navigation -->
+        <div class="sticky-nav py-4 mb-12">
+            <nav class="flex flex-wrap gap-3 justify-center">
+                <a href="#intro" class="px-6 py-2 rounded-full bg-white shadow-md border border-sky-100 text-sky-700 hover:bg-sky-600 hover:text-white font-bold transition-all">🌟 1. Khởi động</a>
+                <a href="#theory" class="px-6 py-2 rounded-full bg-white shadow-md border border-sky-100 text-sky-700 hover:bg-sky-600 hover:text-white font-bold transition-all">📖 2. Kiến thức</a>
+                <a href="#practice" class="px-6 py-2 rounded-full bg-white shadow-md border border-sky-100 text-sky-700 hover:bg-sky-600 hover:text-white font-bold transition-all">🛠️ 3. Thực hành</a>
+                <a href="#quiz" class="px-6 py-2 rounded-full bg-white shadow-md border border-sky-100 text-sky-700 hover:bg-sky-600 hover:text-white font-bold transition-all">🧠 4. Đố vui</a>
+            </nav>
+        </div>
+
+        <!-- SECTION 1: KHỞI ĐỘNG -->
+        <section id="intro" class="card p-8 md:p-12">
+            <h2 class="section-title">🌟 1. Thử thách khởi động</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <p class="text-2xl text-gray-700 leading-relaxed">
+                        Nhìn vào bảng dưới đây, con hãy đoán xem đồ vật nào có <span class="text-red-500 font-black underline">nhiều nhất</span>?
+                    </p>
+                    <div class="overflow-hidden rounded-2xl border-4 border-sky-100 shadow-2xl">
+                        <table class="min-w-full divide-y divide-gray-200 text-xl">
+                            <thead class="bg-sky-600 text-white">
+                                <tr>
+                                    <th class="px-8 py-4 text-left font-bold">Đồ vật</th>
+                                    <th class="px-8 py-4 text-left font-bold">Số lượng</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-100 text-gray-700">
+                                <tr class="hover:bg-sky-50 transition-colors"><td class="px-8 py-5">Táo 🍎</td><td class="px-8 py-5 font-black text-2xl">3</td></tr>
+                                <tr class="hover:bg-sky-50 transition-colors"><td class="px-8 py-5">Cam 🍊</td><td class="px-8 py-5 font-black text-2xl">8</td></tr>
+                                <tr class="hover:bg-sky-50 transition-colors"><td class="px-8 py-5">Nho 🍇</td><td class="px-8 py-5 font-black text-2xl">5</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-yellow-50 to-orange-50 p-10 rounded-[2rem] border-4 border-dashed border-yellow-200 shadow-inner">
+                    <div class="text-4xl mb-6">💡</div>
+                    <p class="text-sky-900 text-2xl italic font-medium leading-relaxed">
+                        "Con thấy không? Nhìn bảng số liệu chúng ta phải đọc từng dòng và so sánh. <br><br>
+                        Nhưng nếu vẽ thành các <b>CỘT CAO - THẤP</b>, chúng ta sẽ thấy ngay kết quả chỉ trong 1 giây!"
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: KIẾN THỨC -->
+        <section id="theory" class="card p-8 md:p-12 bg-gradient-to-b from-white to-sky-50">
+            <h2 class="section-title">📖 2. Kiến thức cần nhớ</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="step-card p-6 bg-white rounded-2xl border-b-8 border-orange-400 shadow-lg">
+                    <div class="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center text-3xl mb-4">✍️</div>
+                    <h3 class="font-black text-xl mb-2 text-orange-700 underline decoration-2">Bước 1</h3>
+                    <p class="text-gray-600 font-medium">Nhập <b>Tên</b> đồ vật vào cột bên trái.</p>
+                </div>
+                <div class="step-card p-6 bg-white rounded-2xl border-b-8 border-blue-400 shadow-lg">
+                    <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-3xl mb-4">🔢</div>
+                    <h3 class="font-black text-xl mb-2 text-blue-700 underline decoration-2">Bước 2</h3>
+                    <p class="text-gray-600 font-medium">Nhập <b>Số lượng</b> vào cột bên phải.</p>
+                </div>
+                <div class="step-card p-6 bg-white rounded-2xl border-b-8 border-green-400 shadow-lg">
+                    <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center text-3xl mb-4">🖱️</div>
+                    <h3 class="font-black text-xl mb-2 text-green-700 underline decoration-2">Bước 3</h3>
+                    <p class="text-gray-600 font-medium">Bấm nút <b>Tạo biểu đồ</b> để xem kết quả.</p>
+                </div>
+                <div class="step-card p-6 bg-white rounded-2xl border-b-8 border-purple-400 shadow-lg">
+                    <div class="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center text-3xl mb-4">👀</div>
+                    <h3 class="font-black text-xl mb-2 text-purple-700 underline decoration-2">Bước 4</h3>
+                    <p class="text-gray-600 font-medium">Tìm cột <b>Cao nhất</b> (Nhiều nhất) và <b>Thấp nhất</b> (Ít nhất).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: THỰC HÀNH -->
+        <section id="practice" class="card p-8 md:p-12">
+            <h2 class="section-title">🛠️ 3. Thực hành tạo biểu đồ</h2>
+            <div class="flex items-center gap-4 bg-yellow-100 p-6 rounded-2xl mb-10 border-2 border-yellow-200">
+                <div class="text-4xl animate-bounce-subtle">📋</div>
+                <div>
+                    <p class="font-black text-yellow-900 text-xl">NHIỆM VỤ CHO CON:</p>
+                    <p class="text-yellow-800 text-lg">Nhập dữ liệu: <span class="bg-white px-2 rounded font-bold">Sách: 5</span>, <span class="bg-white px-2 rounded font-bold">Truyện tranh: 8</span>, <span class="bg-white px-2 rounded font-bold">Vở: 3</span>.</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Data Input -->
+                <div class="bg-slate-50 p-8 rounded-[2rem] border-2 border-slate-200">
+                    <h3 class="font-black text-2xl mb-6 flex items-center gap-3 text-slate-700">
+                        <span class="bg-slate-200 p-2 rounded-lg">⌨️</span> Nhập dữ liệu của con:
+                    </h3>
+                    <div id="input-container" class="space-y-4">
+                        <!-- Rows -->
+                        <div class="flex gap-3">
+                            <input type="text" placeholder="Tên đồ vật" class="name-input w-2/3 p-4 border-2 rounded-xl focus:ring-4 focus:ring-sky-200 focus:border-sky-500 outline-none transition-all text-lg font-medium">
+                            <input type="number" placeholder="Số" class="val-input w-1/3 p-4 border-2 rounded-xl focus:ring-4 focus:ring-sky-200 focus:border-sky-500 outline-none transition-all text-lg font-bold">
+                        </div>
+                        <div class="flex gap-3">
+                            <input type="text" placeholder="Tên đồ vật" class="name-input w-2/3 p-4 border-2 rounded-xl focus:ring-4 focus:ring-sky-200 focus:border-sky-500 outline-none transition-all text-lg font-medium">
+                            <input type="number" placeholder="Số" class="val-input w-1/3 p-4 border-2 rounded-xl focus:ring-4 focus:ring-sky-200 focus:border-sky-500 outline-none transition-all text-lg font-bold">
+                        </div>
+                        <div class="flex gap-3">
+                            <input type="text" placeholder="Tên đồ vật" class="name-input w-2/3 p-4 border-2 rounded-xl focus:ring-4 focus:ring-sky-200 focus:border-sky-500 outline-none transition-all text-lg font-medium">
+                            <input type="number" placeholder="Số" class="val-input w-1/3 p-4 border-2 rounded-xl focus:ring-4 focus:ring-sky-200 focus:border-sky-500 outline-none transition-all text-lg font-bold">
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-8">
+                        <button onclick="addRow()" class="bg-white text-sky-700 border-2 border-sky-700 px-6 py-4 rounded-xl hover:bg-sky-50 font-black text-lg transition-all shadow-sm">
+                            + THÊM DÒNG
+                        </button>
+                        <button onclick="generateChart()" class="bg-sky-600 text-white px-10 py-4 rounded-xl hover:bg-sky-700 font-black text-xl shadow-xl flex-grow transition-all transform hover:scale-105 active:scale-95">
+                            VẼ BIỂU ĐỒ 🚀
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Display Chart -->
+                <div class="bg-white p-8 rounded-[2rem] border-4 border-dashed border-sky-100 relative flex flex-col items-center justify-center min-h-[400px] shadow-inner">
+                    <div id="chart-wrapper" class="w-full hidden h-full">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                    <div id="placeholder-ui" class="text-center p-10">
+                        <div class="text-8xl mb-6 opacity-20">📊</div>
+                        <p class="text-sky-300 font-black text-2xl italic">Kết quả sẽ hiện ở đây!</p>
+                        <p class="text-sky-200 mt-2">Nhập số vào bảng bên trái rồi ấn nút nhé</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="analysis-box" class="hidden mt-12 p-8 bg-emerald-50 border-4 border-emerald-100 rounded-[2rem] shadow-xl">
+                <h3 class="font-black text-emerald-800 text-2xl mb-4 flex items-center gap-3">
+                    <span class="bg-emerald-200 p-2 rounded-full">⭐</span> NHẬN XÉT:
+                </h3>
+                <p id="analysis-text" class="text-emerald-900 text-2xl font-medium leading-relaxed"></p>
+            </div>
+        </section>
+
+        <!-- SECTION 4: QUIZ -->
+        <section id="quiz" class="card p-8 md:p-12 bg-white border-t-[16px] border-purple-500">
+            <div class="flex items-center justify-between mb-10 flex-wrap gap-4">
+                <h2 class="section-title mb-0" style="border-left-color: #a855f7; color: #7e22ce;">🧠 4. Đố vui củng cố</h2>
+                <div id="quiz-badge" class="bg-purple-100 text-purple-700 px-6 py-2 rounded-full font-black text-lg border-2 border-purple-200">
+                    Cố gắng nhé! 💪
+                </div>
+            </div>
+            
+            <div id="quiz-list" class="space-y-10">
+                <!-- Questions -->
+            </div>
+
+            <div id="quiz-footer" class="mt-16 text-center">
+                <div id="score-display" class="hidden animate-bounce text-3xl font-black text-purple-800 bg-purple-100 px-12 py-6 rounded-[2rem] border-4 border-purple-300 inline-block mb-8 shadow-2xl">
+                    🎉 CHÚC MỪNG! CON ĐÚNG 0/6 CÂU!
+                </div>
+                <br>
+                <button id="reset-quiz-btn" onclick="resetQuiz()" class="hidden bg-purple-600 text-white px-12 py-5 rounded-2xl hover:bg-purple-700 font-black shadow-2xl transition-all text-2xl transform hover:-translate-y-2">
+                    🔄 LÀM LẠI TRÒ CHƠI
+                </button>
+            </div>
+        </section>
+
+        <footer class="py-20 text-center space-y-4">
+            <div class="h-px w-full bg-sky-100 mb-8"></div>
+            <p class="text-sky-800 font-black text-xl italic">"Dữ liệu thật thú vị!"</p>
+            <p class="text-gray-400 font-medium">Thiết kế bởi GV: Thái Hoàng An - 2026</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // --- LOGIC VẼ BIỂU ĐỒ ---
+        let myChart = null;
+
+        function addRow() {
+            const container = document.getElementById('input-container');
+            const div = document.createElement('div');
+            div.className = 'flex gap-3 animate-pulse';
+            div.innerHTML = `
+                <input type="text" placeholder="Tên đồ vật" class="name-input w-2/3 p-4 border-2 rounded-xl focus:ring-4 focus:ring-sky-200 focus:border-sky-500 outline-none transition-all text-lg font-medium">
+                <input type="number" placeholder="Số" class="val-input w-1/3 p-4 border-2 rounded-xl focus:ring-4 focus:ring-sky-200 focus:border-sky-500 outline-none transition-all text-lg font-bold">
+            `;
+            container.appendChild(div);
+            setTimeout(() => div.classList.remove('animate-pulse'), 500);
+        }
+
+        function generateChart() {
+            const names = Array.from(document.querySelectorAll('.name-input')).map(i => i.value).filter(v => v.trim() !== "");
+            const values = Array.from(document.querySelectorAll('.val-input')).map(i => parseInt(i.value)).filter(v => !isNaN(v));
+
+            if (names.length === 0 || values.length === 0) {
+                alert("Con ơi, hãy điền đủ Tên và Số vào bảng đã nhé!");
+                return;
+            }
+
+            document.getElementById('placeholder-ui').classList.add('hidden');
+            document.getElementById('chart-wrapper').classList.remove('hidden');
+            
+            const ctx = document.getElementById('myChart').getContext('2d');
+            if (myChart) myChart.destroy();
+
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: names,
+                    datasets: [{
+                        label: 'Số lượng',
+                        data: values,
+                        backgroundColor: [
+                            '#0ea5e9', '#f43f5e', '#f59e0b', '#10b981', '#8b5cf6', '#ec4899', '#6366f1'
+                        ],
+                        borderRadius: 15,
+                        borderWidth: 0,
+                        hoverBorderWidth: 5,
+                        hoverBorderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 2000, easing: 'easeOutBounce' },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { 
+                            backgroundColor: '#0f172a',
+                            titleFont: { size: 18 },
+                            bodyFont: { size: 16 }
+                        }
+                    },
+                    scales: { 
+                        y: { 
+                            beginAtZero: true,
+                            ticks: { font: { size: 14, weight: 'bold' }, stepSize: 1 }
+                        },
+                        x: {
+                            ticks: { font: { size: 16, weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+
+            const maxVal = Math.max(...values);
+            const minVal = Math.min(...values);
+            const maxName = names[values.indexOf(maxVal)];
+            const minName = names[values.indexOf(minVal)];
+
+            document.getElementById('analysis-box').classList.remove('hidden');
+            document.getElementById('analysis-text').innerHTML = `
+                🌟 Giỏi quá! Kết quả là: <br>
+                - Đồ vật nhiều nhất là: <span class="text-sky-600 font-black text-3xl underline decoration-sky-300 decoration-8">${maxName}</span> (${maxVal}).<br>
+                - Đồ vật ít nhất là: <span class="text-orange-600 font-black text-3xl underline decoration-orange-300 decoration-8">${minName}</span> (${minVal}).
+            `;
+            
+            // Tự động cuộn xuống nhận xét
+            document.getElementById('analysis-box').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // --- LOGIC ĐỐ VUI ---
+        const quizData = [
+            {
+                q: "Khi nhìn vào biểu đồ, làm sao biết cái nào NHIỀU NHẤT?",
+                options: ["Cột đó Cao nhất", "Cột đó Thấp nhất", "Cột đó có màu đỏ"],
+                correct: 0
+            },
+            {
+                q: "Để tạo biểu đồ, con phải nhập dữ liệu vào đâu?",
+                options: ["Nhập vào một bức tranh", "Nhập vào bảng gồm Tên và Số", "Không cần nhập gì cả"],
+                correct: 1
+            },
+            {
+                q: "Biểu đồ cột có lợi ích gì so với bảng số thông thường?",
+                options: ["Làm cho máy tính nóng hơn", "Giúp con thấy ngay sự khác biệt về số lượng", "Làm cho chữ to hơn"],
+                correct: 1
+            },
+            {
+                q: "Trong bài học, GV yêu cầu nhập 'Truyện tranh: 8', vậy số 8 là gì?",
+                options: ["Là Tên của đồ vật", "Là Số lượng của đồ vật", "Là màu sắc của cột"],
+                correct: 1
+            },
+            {
+                q: "Nếu một loại đồ vật có số lượng là 0, biểu đồ sẽ thế nào?",
+                options: ["Cột sẽ cao vút lên", "Cột sẽ không có độ cao nào", "Cột sẽ biến thành hình tròn"],
+                correct: 1
+            },
+            {
+                q: "Con có thể thêm nhiều loại đồ dùng vào biểu đồ không?",
+                options: ["Có, thêm bao nhiêu cũng được!", "Không, chỉ được thêm 3 cái thôi", "Chỉ được thêm đồ dùng học tập"],
+                correct: 0
+            }
+        ];
+
+        let userAnswers = new Array(quizData.length).fill(null);
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-list');
+            container.innerHTML = quizData.map((item, qIdx) => `
+                <div class="quiz-item bg-slate-50 p-8 rounded-[2rem] border-2 border-slate-100 shadow-sm transition-all hover:shadow-md">
+                    <p class="font-black text-2xl mb-6 text-slate-800 leading-tight">
+                        <span class="bg-purple-600 text-white w-10 h-10 inline-flex items-center justify-center rounded-full mr-3">${qIdx + 1}</span> 
+                        ${item.q}
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        ${item.options.map((opt, oIdx) => `
+                            <button 
+                                onclick="handleAnswer(${qIdx}, ${oIdx}, this)" 
+                                class="quiz-option text-left p-6 bg-white rounded-2xl shadow-sm text-lg font-bold text-slate-600"
+                            >${opt}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleAnswer(qIdx, oIdx, btn) {
+            if (userAnswers[qIdx] !== null) return;
+
+            userAnswers[qIdx] = oIdx;
+            const isCorrect = oIdx === quizData[qIdx].correct;
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                btn.innerHTML += " ✨ (XUẤT SẮC!)";
+            } else {
+                btn.classList.add('wrong');
+                btn.innerHTML += " ❌ (Hơi tiếc!)";
+                buttons[quizData[qIdx].correct].classList.add('correct');
+            }
+
+            buttons.forEach(b => b.disabled = true);
+
+            if (!userAnswers.includes(null)) {
+                showFinalResult();
+            }
+        }
+
+        function showFinalResult() {
+            let correctCount = userAnswers.filter((ans, idx) => ans === quizData[idx].correct).length;
+            const scoreDisplay = document.getElementById('score-display');
+            scoreDisplay.innerHTML = `🌟 KẾT QUẢ: CON ĐÚNG ${correctCount}/${quizData.length} CÂU!`;
+            scoreDisplay.classList.remove('hidden');
+            document.getElementById('reset-quiz-btn').classList.remove('hidden');
+            document.getElementById('quiz-badge').innerHTML = "Đã hoàn thành! 🎉";
+            
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            userAnswers = new Array(quizData.length).fill(null);
+            document.getElementById('score-display').classList.add('hidden');
+            document.getElementById('reset-quiz-btn').classList.add('hidden');
+            document.getElementById('quiz-badge').innerHTML = "Cố gắng nhé! 💪";
+            renderQuiz();
+            document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.onload = renderQuiz;
+    </script>
+</body>
+</html>
