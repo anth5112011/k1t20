@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 2.2: Kể Chuyện Bằng Biểu Đồ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f9ff; scroll-behavior: smooth; }
+        .card { background: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 2rem; }
+        .section-title { border-left: 6px solid #0284c7; padding-left: 1rem; margin-bottom: 1.5rem; color: #0369a1; font-weight: bold; font-size: 1.5rem; }
+        canvas { max-height: 350px; width: 100% !important; }
+        .quiz-option { transition: all 0.2s; cursor: pointer; }
+        .quiz-option:hover:not(:disabled) { background-color: #f0f9ff; border-color: #0ea5e9; }
+        .correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534; }
+        .wrong { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b; }
+        .sticky-nav { position: sticky; top: 0; z-index: 50; background: rgba(240, 249, 255, 0.9); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-5xl font-bold text-sky-700 mb-2">📊 Kể Chuyện Bằng Biểu Đồ</h1>
+            <p class="text-lg text-gray-600">Môn: Tin học - Lớp 1 (Vinschool Grand Park)</p>
+        </header>
+
+        <!-- Quick Navigation -->
+        <div class="sticky-nav py-4 mb-8 border-b border-sky-100">
+            <nav class="flex flex-wrap gap-2 justify-center">
+                <a href="#intro" class="px-4 py-2 rounded-full bg-white shadow-sm border border-sky-200 text-sky-700 hover:bg-sky-600 hover:text-white font-medium text-sm transition-all">1. Khởi động</a>
+                <a href="#theory" class="px-4 py-2 rounded-full bg-white shadow-sm border border-sky-200 text-sky-700 hover:bg-sky-600 hover:text-white font-medium text-sm transition-all">2. Kiến thức</a>
+                <a href="#practice" class="px-4 py-2 rounded-full bg-white shadow-sm border border-sky-200 text-sky-700 hover:bg-sky-600 hover:text-white font-medium text-sm transition-all">3. Thực hành</a>
+                <a href="#quiz" class="px-4 py-2 rounded-full bg-white shadow-sm border border-sky-200 text-sky-700 hover:bg-sky-600 hover:text-white font-medium text-sm transition-all">4. Đố vui</a>
+            </nav>
+        </div>
+
+        <!-- SECTION 1: KHỞI ĐỘNG -->
+        <section id="intro" class="card p-6 md:p-8">
+            <h2 class="section-title">🌟 1. Thử thách khởi động</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <p class="text-lg mb-4 text-gray-700">Nhìn vào bảng dưới đây, con hãy đoán xem đồ vật nào có <b>nhiều nhất</b>?</p>
+                    <div class="overflow-hidden rounded-xl border border-gray-200 shadow-sm">
+                        <table class="min-w-full divide-y divide-gray-200 text-lg">
+                            <thead class="bg-sky-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left font-bold text-sky-700">Đồ vật</th>
+                                    <th class="px-6 py-3 text-left font-bold text-sky-700">Số lượng</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200 text-gray-600">
+                                <tr><td class="px-6 py-4">Táo 🍎</td><td class="px-6 py-4 font-bold">3</td></tr>
+                                <tr><td class="px-6 py-4">Cam 🍊</td><td class="px-6 py-4 font-bold">8</td></tr>
+                                <tr><td class="px-6 py-4">Nho 🍇</td><td class="px-6 py-4 font-bold">5</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="bg-sky-50 p-6 rounded-2xl border-2 border-dashed border-sky-200">
+                    <p class="text-sky-800 text-lg italic leading-relaxed">
+                        "Con thấy không? Nhìn bảng số liệu chúng ta phải đọc từng dòng và so sánh trong đầu. <br><br>
+                        Nhưng nếu chúng ta vẽ chúng thành các <b>CỘT CAO - THẤP</b>, chúng ta sẽ thấy ngay kết quả!"
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: KIẾN THỨC -->
+        <section id="theory" class="card p-6 md:p-8">
+            <h2 class="section-title">📖 2. Kiến thức cần nhớ</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="p-4 bg-orange-50 rounded-xl border-b-4 border-orange-400">
+                    <span class="text-3xl mb-2 block">✍️</span>
+                    <h3 class="font-bold mb-1">Bước 1</h3>
+                    <p class="text-sm">Nhập <b>Tên</b> đồ vật vào cột bên trái.</p>
+                </div>
+                <div class="p-4 bg-blue-50 rounded-xl border-b-4 border-blue-400">
+                    <span class="text-3xl mb-2 block">🔢</span>
+                    <h3 class="font-bold mb-1">Bước 2</h3>
+                    <p class="text-sm">Nhập <b>Số lượng</b> vào cột bên phải.</p>
+                </div>
+                <div class="p-4 bg-green-50 rounded-xl border-b-4 border-green-400">
+                    <span class="text-3xl mb-2 block">🖱️</span>
+                    <h3 class="font-bold mb-1">Bước 3</h3>
+                    <p class="text-sm">Bấm nút <b>Tạo biểu đồ</b> để xem kết quả.</p>
+                </div>
+                <div class="p-4 bg-purple-50 rounded-xl border-b-4 border-purple-400">
+                    <span class="text-3xl mb-2 block">👀</span>
+                    <h3 class="font-bold mb-1">Bước 4</h3>
+                    <p class="text-sm">Tìm cột <b>Cao nhất</b> và <b>Thấp nhất</b>.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: THỰC HÀNH -->
+        <section id="practice" class="card p-6 md:p-8">
+            <h2 class="section-title">🛠️ 3. Thực hành tạo biểu đồ</h2>
+            <div class="bg-yellow-50 p-4 rounded-lg mb-6 border-l-4 border-yellow-400">
+                <p class="font-bold text-yellow-800">Nhiệm vụ nhóm:</p>
+                <p class="text-yellow-700 italic">Nhập dữ liệu sau: Sách: 5, Truyện tranh: 8, Vở: 3. Sau đó nhấn nút Tạo biểu đồ.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Data Input -->
+                <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                    <h3 class="font-bold mb-4 flex items-center gap-2">⌨️ Nhập dữ liệu:</h3>
+                    <div id="input-container" class="space-y-3">
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Tên (ví dụ: Sách)" class="name-input w-2/3 p-3 border rounded-lg focus:ring-2 focus:ring-sky-400 outline-none">
+                            <input type="number" placeholder="Số" class="val-input w-1/3 p-3 border rounded-lg focus:ring-2 focus:ring-sky-400 outline-none">
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Tên" class="name-input w-2/3 p-3 border rounded-lg focus:ring-2 focus:ring-sky-400 outline-none">
+                            <input type="number" placeholder="Số" class="val-input w-1/3 p-3 border rounded-lg focus:ring-2 focus:ring-sky-400 outline-none">
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Tên" class="name-input w-2/3 p-3 border rounded-lg focus:ring-2 focus:ring-sky-400 outline-none">
+                            <input type="number" placeholder="Số" class="val-input w-1/3 p-3 border rounded-lg focus:ring-2 focus:ring-sky-400 outline-none">
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3 mt-6">
+                        <button onclick="addRow()" class="bg-white text-sky-700 border border-sky-700 px-4 py-3 rounded-lg hover:bg-sky-50 font-bold transition-all">+ Thêm dòng</button>
+                        <button onclick="generateChart()" class="bg-sky-600 text-white px-8 py-3 rounded-lg hover:bg-sky-700 font-bold shadow-lg flex-grow transition-all">VẼ BIỂU ĐỒ 🚀</button>
+                    </div>
+                </div>
+
+                <!-- Display Chart -->
+                <div class="bg-white p-6 rounded-2xl border-2 border-dashed border-gray-300 relative flex flex-col items-center justify-center min-h-[300px]">
+                    <div id="chart-wrapper" class="w-full hidden">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                    <div id="placeholder-ui" class="text-center">
+                        <div class="text-5xl mb-4">📉</div>
+                        <p class="text-gray-400 font-medium italic">Biểu đồ của con sẽ xuất hiện ở đây!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="analysis-box" class="hidden mt-8 p-6 bg-green-50 border border-green-200 rounded-2xl shadow-sm animate-pulse">
+                <h3 class="font-bold text-green-800 mb-2 flex items-center gap-2">🔍 Kết quả quan sát:</h3>
+                <p id="analysis-text" class="text-green-700 text-lg"></p>
+            </div>
+        </section>
+
+        <!-- SECTION 4: QUIZ -->
+        <section id="quiz" class="card p-6 md:p-8 bg-white border-t-8 border-purple-500">
+            <h2 class="section-title" style="border-left-color: #a855f7; color: #7e22ce;">🧠 4. Đố vui củng cố</h2>
+            
+            <div id="quiz-list" class="space-y-8">
+                <!-- Questions will be rendered here by JS -->
+            </div>
+
+            <div id="quiz-controls" class="mt-10 text-center flex flex-col items-center gap-4">
+                <div id="score-display" class="hidden text-2xl font-bold text-purple-700 bg-purple-100 px-8 py-4 rounded-full">
+                    Kết quả: 0/5 câu đúng
+                </div>
+                <button id="reset-quiz-btn" onclick="resetQuiz()" class="hidden bg-purple-600 text-white px-10 py-4 rounded-xl hover:bg-purple-700 font-bold shadow-xl transition-all text-lg">
+                    🔄 LÀM LẠI TỪ ĐẦU
+                </button>
+            </div>
+        </section>
+
+        <footer class="py-12 text-center text-gray-400 text-sm border-t border-gray-100">
+            Thiết kế bài giảng tương tác - Giáo viên: Thái Hoàng An<br>
+            © 2026 Vinschool Education
+        </footer>
+    </div>
+
+    <script>
+        // --- CHART LOGIC ---
+        let myChart = null;
+
+        function addRow() {
+            const container = document.getElementById('input-container');
+            const div = document.createElement('div');
+            div.className = 'flex gap-2';
+            div.innerHTML = `
+                <input type="text" placeholder="Tên" class="name-input w-2/3 p-3 border rounded-lg focus:ring-2 focus:ring-sky-400 outline-none">
+                <input type="number" placeholder="Số" class="val-input w-1/3 p-3 border rounded-lg focus:ring-2 focus:ring-sky-400 outline-none">
+            `;
+            container.appendChild(div);
+        }
+
+        function generateChart() {
+            const names = Array.from(document.querySelectorAll('.name-input')).map(i => i.value).filter(v => v.trim() !== "");
+            const values = Array.from(document.querySelectorAll('.val-input')).map(i => parseInt(i.value)).filter(v => !isNaN(v));
+
+            if (names.length === 0 || values.length === 0) {
+                alert("Con hãy nhập tên đồ dùng và số lượng vào bảng nhé!");
+                return;
+            }
+
+            document.getElementById('placeholder-ui').classList.add('hidden');
+            document.getElementById('chart-wrapper').classList.remove('hidden');
+            
+            const ctx = document.getElementById('myChart').getContext('2d');
+            if (myChart) myChart.destroy();
+
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: names,
+                    datasets: [{
+                        label: 'Số lượng',
+                        data: values,
+                        backgroundColor: [
+                            '#38bdf8', '#fb7185', '#fbbf24', '#34d399', '#a78bfa', '#f472b6'
+                        ],
+                        borderRadius: 10,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { 
+                        y: { 
+                            beginAtZero: true,
+                            ticks: { stepSize: 1 }
+                        } 
+                    }
+                }
+            });
+
+            const maxVal = Math.max(...values);
+            const minVal = Math.min(...values);
+            const maxName = names[values.indexOf(maxVal)];
+            const minName = names[values.indexOf(minVal)];
+
+            document.getElementById('analysis-box').classList.remove('hidden');
+            document.getElementById('analysis-text').innerHTML = `
+                Con giỏi lắm! Nhìn biểu đồ ta thấy ngay:<br>
+                - <b>${maxName}</b> là nhiều nhất (cột cao nhất với ${maxVal}).<br>
+                - <b>${minName}</b> là ít nhất (cột thấp nhất với ${minVal}).
+            `;
+        }
+
+        // --- QUIZ LOGIC ---
+        const quizData = [
+            {
+                q: "Để tạo biểu đồ, đầu tiên con cần phải có gì?",
+                options: ["Một hộp bút màu", "Một bộ dữ liệu (tên và số lượng)", "Một tờ giấy trắng"],
+                correct: 1
+            },
+            {
+                q: "Trong biểu đồ cột, cột THẤP nhất cho biết điều gì?",
+                options: ["Loại đó có số lượng ít nhất", "Loại đó có số lượng nhiều nhất", "Loại đó đẹp nhất"],
+                correct: 0
+            },
+            {
+                q: "Biểu đồ cột giúp con làm gì nhanh hơn bảng số?",
+                options: ["Giúp con vẽ đẹp hơn", "Giúp con so sánh và đọc kết quả nhanh hơn", "Giúp con học thuộc lòng số"],
+                correct: 1
+            },
+            {
+                q: "Khi nhập số lượng là 10, cột trong biểu đồ sẽ như thế nào so với số lượng là 2?",
+                options: ["Cột 10 sẽ thấp hơn", "Cột 10 sẽ cao hơn nhiều", "Hai cột bằng nhau"],
+                correct: 1
+            },
+            {
+                q: "Con có thể tạo biểu đồ cột từ công cụ kỹ thuật số không?",
+                options: ["Có thể chứ!", "Không thể, chỉ vẽ được bằng tay thôi", "Chỉ dùng để chơi game thôi"],
+                correct: 0
+            }
+        ];
+
+        let userAnswers = new Array(quizData.length).fill(null);
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-list');
+            container.innerHTML = quizData.map((item, qIdx) => `
+                <div class="quiz-item bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                    <p class="font-bold text-lg mb-4 text-gray-800">${qIdx + 1}. ${item.q}</p>
+                    <div class="grid grid-cols-1 gap-3">
+                        ${item.options.map((opt, oIdx) => `
+                            <button 
+                                onclick="handleAnswer(${qIdx}, ${oIdx}, this)" 
+                                class="quiz-option text-left p-4 border-2 border-white bg-white rounded-xl shadow-sm font-medium"
+                            >${opt}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleAnswer(qIdx, oIdx, btn) {
+            if (userAnswers[qIdx] !== null) return; // Only allow one answer
+
+            userAnswers[qIdx] = oIdx;
+            const isCorrect = oIdx === quizData[qIdx].correct;
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Feedback visually
+            if (isCorrect) {
+                btn.classList.add('correct');
+                btn.innerHTML += " ✨ (Đúng rồi!)";
+            } else {
+                btn.classList.add('wrong');
+                btn.innerHTML += " ❌ (Chưa đúng)";
+                // Show correct one
+                buttons[quizData[qIdx].correct].classList.add('correct');
+            }
+
+            // Disable others
+            buttons.forEach(b => b.disabled = true);
+
+            // Check if finished
+            if (!userAnswers.includes(null)) {
+                showFinalResult();
+            }
+        }
+
+        function showFinalResult() {
+            let correctCount = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans === quizData[idx].correct) correctCount++;
+            });
+
+            const scoreDisplay = document.getElementById('score-display');
+            scoreDisplay.innerHTML = `🌟 Kết quả: ${correctCount}/${quizData.length} câu đúng!`;
+            scoreDisplay.classList.remove('hidden');
+            document.getElementById('reset-quiz-btn').classList.remove('hidden');
+            
+            // Scroll to result
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            userAnswers = new Array(quizData.length).fill(null);
+            document.getElementById('score-display').classList.add('hidden');
+            document.getElementById('reset-quiz-btn').classList.add('hidden');
+            renderQuiz();
+            // Scroll back to quiz start
+            document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Init
+        window.onload = renderQuiz;
+    </script>
+</body>
+</html>
